@@ -8,7 +8,7 @@
 - [ ] 👤 Настройки Data API: Data API — вкл, Automatically expose new tables — **выкл**, Automatic RLS — вкл
 - [x] 🤖 Установлены `supabase` CLI и `gh`
 - [x] 👤 `! supabase login` и `! gh auth login`
-- [ ] 👤 Аккаунт на vercel.com (вход через GitHub)
+- [x] 👤 Аккаунт на vercel.com (вход через GitHub)
 - [ ] 👤 Сообщение в чат hh: когда начал и когда планирую сдать
 
 ## Этап 1. Каркас
@@ -18,8 +18,8 @@
 - [x] 🤖 `config.toml`: `enable_signup = false` → `supabase config push` (проверено: signup → 422 `signup_disabled`)
 - [x] 🤖 Страница входа (email + пароль), выход, защищённый layout
 - [x] 🤖 Репозиторий на GitHub (открытый), первый push — https://github.com/AlexConglomerate/2bstudio-crm
-- [ ] 👤 Vercel: Import project из GitHub, env `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`
-- [ ] 👤 Проверить ссылку **без VPN** (телефон, мобильный интернет). Не открывается → записать в decisions, искать альтернативу
+- [x] 👤 Vercel: Import project из GitHub, env `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` — https://2bstudio-crm.vercel.app
+- [x] 👤 ~~Проверить ссылку без VPN~~ — снято: автор не в России, Vercel из России недавно открывался
 
 Готово, когда: ссылка открывается, вход работает.
 
@@ -55,9 +55,9 @@
 
 ## Где остановились
 
-Этап 1: каркас готов и запушен. Вход проверен скриптом против облака (временный пользователь, удалён);
-в браузере пока войти некем — пользователей создаст `scripts/seed.ts` на этапе 2.
+Этап 1 закрыт. Приложение: https://2bstudio-crm.vercel.app (Vercel, автодеплой из `main`), env-переменные подхватились,
+секретного ключа в бандле нет, SPA-rewrite работает. URL прописан в `site_url` и вызван `supabase config push`.
+В браузере войти пока некем — пользователей создаст `scripts/seed.ts` на этапе 2.
 Ключи: во фронте publishable (`sb_publishable_…`) в переменной `VITE_SUPABASE_ANON_KEY`, в `.env` секретный `sb_secret_…`.
-Регион проекта оказался eu-west-1, а не Frankfurt (записано в decisions).
-Дальше — 👤 Vercel (импорт репо, две env-переменные), проверка ссылки без VPN; параллельно 🤖 этап 2.
-После деплоя: добавить URL Vercel в `site_url`/`additional_redirect_urls` в `config.toml` и `supabase config push`.
+Интеграцию Supabase в Vercel **не** подключали (она создала бы свои переменные, включая секретный ключ).
+Дальше — этап 2 (миграции, seed, security-check).
