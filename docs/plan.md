@@ -5,11 +5,11 @@
 ## Этап 0. Подготовка
 
 - [x] 👤 Аккаунт Supabase, проект `2BStudio` (Frankfurt), пароль БД → `.env`
-- [ ] 👤 Настройки Data API: Data API — вкл, Automatically expose new tables — **выкл**, Automatic RLS — вкл
+- [x] 👤 Настройки Data API: Data API — вкл, Automatically expose new tables — **выкл**, Automatic RLS — вкл (проверено запросом к базе)
 - [x] 🤖 Установлены `supabase` CLI и `gh`
 - [x] 👤 `! supabase login` и `! gh auth login`
 - [x] 👤 Аккаунт на vercel.com (вход через GitHub)
-- [ ] 👤 Сообщение в чат hh: когда начал и когда планирую сдать
+- [x] 👤 Сообщение в чат hh: когда начал и когда планирую сдать
 
 ## Этап 1. Каркас
 
@@ -61,3 +61,9 @@
 Ключи: во фронте publishable (`sb_publishable_…`) в переменной `VITE_SUPABASE_ANON_KEY`, в `.env` секретный `sb_secret_…`.
 Интеграцию Supabase в Vercel **не** подключали (она создала бы свои переменные, включая секретный ключ).
 Дальше — этап 2 (миграции, seed, security-check).
+
+Учесть в этапе 2 (проверено в облачной базе через `pg_default_acl` / `pg_event_trigger`):
+- Новые функции в `public` по умолчанию НЕ исполняются `authenticated` → явный `grant execute` на RPC и хелперы.
+- Новые таблицы по умолчанию дают `anon`/`authenticated` права `Dxtm` (truncate и др.), без `select/insert/update/delete`
+  → в миграции `revoke all on table … from anon, authenticated`, затем выдать только нужное.
+- Event trigger `ensure_rls` включает RLS автоматически, но в миграциях всё равно пишем `enable row level security` явно.
